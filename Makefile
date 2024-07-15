@@ -2,15 +2,15 @@ CC = gcc
 CFLAGS = -lcurl
 SOURCE_DIR = src
 TARGET = cwfuzz
-BUILD_DIR = $(SOURCE_DIR)
+BUILD_DIR = bin
 
-all: $(TARGET)
+all: $(BUILD_DIR)/$(TARGET)
 
-$(TARGET): $(SOURCE_DIR)/$(TARGET).c
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $<
+$(BUILD_DIR)/$(TARGET): $(SOURCE_DIR)/$(TARGET).c $(SOURCE_DIR)/include/cwfuzz.h
+	$(CC) $(CFLAGS) -o $@ $<
 
-install: $(TARGET)
-	cp $(BUILD_DIR)/$(TARGET) /usr/bin
+install: $(BUILD_DIR)/$(TARGET)
+	cp $< /usr/bin
 
 clean:
 	rm -f $(BUILD_DIR)/$(TARGET)
