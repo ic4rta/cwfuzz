@@ -51,6 +51,8 @@ Tambien el programa incluye la palabra reservada "CWFUZZ" que tiene el mismo fun
 cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200 -t 20
 ```
 
+Multiples codigos de estado
+
 ```bash
 cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200,301 -t 20
 ```
