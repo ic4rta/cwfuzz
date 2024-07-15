@@ -17,13 +17,19 @@ apt install libcurl4-openssl-dev (opcional)
 
 **Arch based**
 
+#### Instalar la herramienta
+
+```bash
+sudo make install
+```
+
 ```bash
 pacman -S libcurl-gnutls
 ```
 
 ## Uso
 
-**Opciones**:
+#### Opciones:
 
 -u: url
 
@@ -33,7 +39,7 @@ pacman -S libcurl-gnutls
 
 -t: cantidad de hilos
 
-**Ejemplo de uso:**
+#### Ejemplo de uso:
 
 ```bash
 cfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200 -t 20
