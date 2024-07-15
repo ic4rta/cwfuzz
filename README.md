@@ -41,6 +41,8 @@ sudo make install
 
 -o: archivo a guardar los resultados (opcional)
 
+-a: user-agent (opcional, se usa uno por defecto)
+
 Tambien el programa incluye la palabra reservada "CWFUZZ" que tiene el mismo funcionamiento como en las herramientas wfuzz o ffuf
 
 #### Ejemplo de uso:
@@ -50,9 +52,17 @@ cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200 -t 20
 ```
 
 ```bash
-cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200,300 -t 20
+cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200,301 -t 20
 ```
 
+Guardar la salida en el archivo /tmp/fuzz
+
 ```bash
-cwfuzz -u https://ic4rta.github.io/CWFUZZ -w wordlist.txt -x 200,300 -t 20 -o /tmp/fuzz
+cwfuzz -u https://ic4rta.github.io/CWFUZZ -w wordlist.txt -x 200,301 -t 20 -o /tmp/fuzz
+```
+
+Poner un User-Agent personalizado
+
+```bash
+cwfuzz -u https://ic4rta.github.io/CWFUZZ -w wordlist.txt -x 200,301 -t 20 -o /tmp/fuzz -a "Cwfuzz"
 ```
