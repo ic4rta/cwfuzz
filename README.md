@@ -76,5 +76,5 @@ cwfuzz -u https://ic4rta.github.io/CWFUZZ -w wordlist.txt -x 200,301 -t 20 -o /t
 Enumerar subdominios (VHOST)
 
 ```bash
-cwfuzz -u CWFUZZ.jupiter.htb -w /tmp/dic.txt -x 200,301 -t 20
+cwfuzz -u CWFUZZ.jupiter.htb -w wordlist.txt -x 200,301 -t 20
 ```
