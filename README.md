@@ -29,7 +29,7 @@ sudo make install
 
 ## Uso
 
-#### Opciones:
+### Opciones:
 
 -u: url
 
@@ -43,9 +43,11 @@ sudo make install
 
 -a: user-agent (opcional, se usa uno por defecto)
 
-Tambien el programa incluye la palabra reservada "CWFUZZ" que tiene el mismo funcionamiento como en las herramientas wfuzz o ffuf
+Tambien el programa incluye la palabra reservada "CWFUZZ" que tiene el mismo funcionamiento como en las herramientas wfuzz o ffuf.
 
-#### Ejemplo de uso:
+La enumeracion de subdominios se hace en modo VHOST, el dominio debe ir sin `http` o `https` y `www`
+
+### Ejemplo de uso:
 
 Recomiendo siempre poner en la opcion -x, tambien el codigo de estado 301, ya que por defecto no sigue las redirecciones
 
@@ -69,4 +71,10 @@ Poner un User-Agent personalizado
 
 ```bash
 cwfuzz -u https://ic4rta.github.io/CWFUZZ -w wordlist.txt -x 200,301 -t 20 -o /tmp/fuzz -a "Cwfuzz"
+```
+
+Enumerar subdominios (VHOST)
+
+```bash
+cwfuzz -u CWFUZZ.jupiter.htb -w /tmp/dic.txt -x 200,301 -t 20
 ```
