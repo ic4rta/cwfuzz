@@ -54,5 +54,5 @@ cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200,300 -t 20
 ```
 
 ```bash
-cwfuzz -u https://ic4rta.github.io/CWFZZ -w wordlist.txt -x 200,300 -t 20 -o /tmp/fuzz
+cwfuzz -u https://ic4rta.github.io/CWFUZZ -w wordlist.txt -x 200,300 -t 20 -o /tmp/fuzz
 ```
