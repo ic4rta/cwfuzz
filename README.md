@@ -39,6 +39,10 @@ sudo make install
 
 -t: cantidad de hilos
 
+-o: archivo a guardar los resultados (opcional)
+
+Tambien el programa incluye la palabra reservada "CWFUZZ" que tiene el mismo funcionamiento como en las herramientas wfuzz o ffuf
+
 #### Ejemplo de uso:
 
 ```bash
@@ -47,4 +51,8 @@ cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200 -t 20
 
 ```bash
 cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200,300 -t 20
+```
+
+```bash
+cwfuzz -u https://ic4rta.github.io/CWFZZ -w wordlist.txt -x 200,300 -t 20 -o /tmp/fuzz
 ```
