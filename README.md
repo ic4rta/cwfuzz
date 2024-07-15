@@ -49,7 +49,9 @@ La enumeracion de subdominios se hace en modo VHOST, el dominio debe ir sin `htt
 
 ### Ejemplo de uso:
 
-Recomiendo siempre poner en la opcion -x, tambien el codigo de estado 301, ya que por defecto no sigue las redirecciones
+> [!IMPORTANT]  
+> Recomiendo siempre poner en la opcion -x, tambien el codigo de estado 301, ya que por defecto no sigue las redirecciones
+
 
 ```bash
 cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200 -t 20
