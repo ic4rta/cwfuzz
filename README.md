@@ -31,17 +31,17 @@ sudo make install
 
 ### Opciones:
 
--u: url
+- u: url
 
--w: wordlist 
+- w: wordlist 
 
--x: codigos de estados los cuales hara match, puede recibir varios separados por comas
+- x: codigos de estados los cuales hara match, puede recibir varios separados por comas
 
--t: cantidad de hilos
+- t: cantidad de hilos
 
--o: archivo a guardar los resultados (opcional)
+- o: archivo a guardar los resultados (opcional)
 
--a: user-agent (opcional, se usa uno por defecto)
+- a: user-agent (opcional, se usa uno por defecto)
 
 Tambien el programa incluye la palabra reservada "CWFUZZ" que tiene el mismo funcionamiento como en las herramientas wfuzz o ffuf.
 
