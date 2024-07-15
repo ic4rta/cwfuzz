@@ -18,10 +18,12 @@ typedef struct {
     int cantidad_codigos;
     int cantidad_hilos;
     const char* archivo_resultados;
+    const char* user_agent;
     FILE* archivo_res;
     pthread_mutex_t mutex;
     CURL* curl_handles[MAX_HILOS];
 } Cwfuzz;
+
 
 typedef struct {
     Cwfuzz* cwfuzz_struct;
@@ -88,19 +90,24 @@ void liberar_recursos(Cwfuzz *cwfuzz_struct, pthread_t *hilos) {
     curl_global_cleanup();
 }
 
-int hacer_peticion(const char* url, CURL* curl) {
+int hacer_peticion(const char* url, CURL* curl, const Cwfuzz* cwfuzz_struct) {
     CURLcode respuesta;
     int codigo_estado = 0;
 
     curl_easy_setopt(curl, CURLOPT_URL, url);
     curl_easy_setopt(curl, CURLOPT_NOBODY, 1L);
-    curl_easy_setopt(curl, CURLOPT_USERAGENT, USER_AGENT);
+    if (cwfuzz_struct->user_agent) {
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, cwfuzz_struct->user_agent);
+    } else {
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, USER_AGENT);
+    }
     respuesta = curl_easy_perform(curl);
     if (respuesta == CURLE_OK) {
         curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &codigo_estado);
     }
     return codigo_estado;
 }
+
 
 void construir_url_completa(char* url_completa, size_t url_completa_size, const Cwfuzz* cwfuzz_struct, const char* linea) {
     char* cwfuzz = strstr(cwfuzz_struct->url, "CWFUZZ");
@@ -132,7 +139,8 @@ void* fuzz(void* arg) {
 
             construir_url_completa(url_completa, sizeof(url_completa), cwfuzz_struct, linea);
 
-            int codigo_estado = hacer_peticion(url_completa, cwfuzz_struct->curl_handles[hilo_id]);
+            int codigo_estado = hacer_peticion(url_completa, cwfuzz_struct->curl_handles[hilo_id], cwfuzz_struct);
+
             for (int i = 0; i < cwfuzz_struct->cantidad_codigos; ++i) {
                 if (codigo_estado == cwfuzz_struct->codigos_estado[i]) {
                     mostrar_resultado(linea, codigo_estado);
