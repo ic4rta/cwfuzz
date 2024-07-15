@@ -17,14 +17,14 @@ apt install libcurl4-openssl-dev (opcional)
 
 **Arch based**
 
+```bash
+pacman -S libcurl-gnutls
+```
+
 #### Instalar la herramienta
 
 ```bash
 sudo make install
-```
-
-```bash
-pacman -S libcurl-gnutls
 ```
 
 ## Uso
