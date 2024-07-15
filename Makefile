@@ -1,11 +1,11 @@
 CC = gcc
 CFLAGS = -lcurl -Wall -O2
 
-TARGET = cfuzz
+TARGET = cwfuzz
 
 all: $(TARGET)
 
-$(TARGET): cfuzz.c
+$(TARGET): cwfuzz.c
 	$(CC) $(CFLAGS) -o $@ $<
 
 install: $(TARGET)

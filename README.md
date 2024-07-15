@@ -1,4 +1,4 @@
-## Cfuzz
+## cwfuzz
 
 Hice por que queria aprender a usar ```libcurl```, para instalarla:
 
@@ -42,9 +42,9 @@ sudo make install
 #### Ejemplo de uso:
 
 ```bash
-cfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200 -t 20
+cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200 -t 20
 ```
 
 ```bash
-cfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200,300 -t 20
+cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200,300 -t 20
 ```
