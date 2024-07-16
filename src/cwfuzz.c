@@ -8,14 +8,12 @@
 
 int main(int argc, char* argv[]) {
     Cwfuzz cwfuzz_struct = {0};
-    cwfuzz_struct.user_agent = NULL;
-    int opt;
     pthread_t hilos[MAX_HILOS];
     Hilo datos_hilos[MAX_HILOS];
-    curl_global_init(CURL_GLOBAL_ALL);
+    int opcion;
 
-    while ((opt = getopt(argc, argv, "u:w:x:t:o:a:")) != -1) {
-        switch (opt) {
+    while ((opcion = getopt(argc, argv, "u:w:x:t:o:a:e:")) != -1) {
+        switch (opcion) {
             case 'u':
                 cwfuzz_struct.url = optarg;
                 break;
@@ -34,31 +32,43 @@ int main(int argc, char* argv[]) {
                 break;
             case 't':
                 cwfuzz_struct.cantidad_hilos = atoi(optarg);
+                if (cwfuzz_struct.cantidad_hilos > MAX_HILOS) {
+                    fprintf(stderr, "Error: The number of threads cannot exceed %d\n", MAX_HILOS);
+                    exit(EXIT_FAILURE);
+                }
                 break;
             case 'o':
                 cwfuzz_struct.archivo_output = optarg;
                 break;
-	        case 'a':
-	            cwfuzz_struct.user_agent = optarg;
-	            break;
-	        default:
-	            fprintf(stderr, "Use: %s -u <URL> -w <wordlist> -x <status code...> -t <threads> [-o <output file>] [-a <custom User-Agent>]\n", argv[0]);
-	            exit(EXIT_FAILURE);
+            case 'a':
+                cwfuzz_struct.user_agent = optarg;
+                break;
+            case 'e':
+                {
+                    char* token = strtok(optarg, ",");
+                    while (token != NULL) {
+                        cwfuzz_struct.extensiones = realloc(cwfuzz_struct.extensiones, (cwfuzz_struct.cantidad_extensiones + 1) * sizeof(char*));
+                        cwfuzz_struct.extensiones[cwfuzz_struct.cantidad_extensiones] = strdup(token);
+                        cwfuzz_struct.cantidad_extensiones++;
+                        token = strtok(NULL, ",");
+                    }
+                }
+                break;
+            default:
+                fprintf(stderr, "Use: %s -u <URL> -w <wordlist> -x <status code...> -t <threads> [-o output file] [-a user agent] [-e extensions]\n", argv[0]);
+                exit(EXIT_FAILURE);
         }
     }
 
-    if (!cwfuzz_struct.url || !cwfuzz_struct.worlist || !cwfuzz_struct.codigos_estado || cwfuzz_struct.cantidad_hilos <= 0) {
-        fprintf(stderr, "Faltan argumentos obligatorios\n");
-        fprintf(stderr, "Use: %s -u <URL> -w <wordlist> -x <status code...> -t <threads> [-o <output file>] [-a <custom User-Agent>]\n", argv[0]);
+    if (!cwfuzz_struct.url || !cwfuzz_struct.worlist || !cwfuzz_struct.codigos_estado || cwfuzz_struct.cantidad_hilos == 0) {
+        fprintf(stderr, "Use: %s -u <URL> -w <wordlist> -x <status code...> -t <threads> [-o output file] [-a user agent] [-e extensions]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
-    banner(&cwfuzz_struct);
-    curl_global_init(CURL_GLOBAL_ALL);
+	banner(&cwfuzz_struct);
     guardar_resultados(&cwfuzz_struct);
     init_hilo_curl(&cwfuzz_struct);
     crear_hilos(&cwfuzz_struct, hilos, datos_hilos);
     liberar_recursos(&cwfuzz_struct, hilos);
-
-    return EXIT_SUCCESS;
+    return 0;
 }

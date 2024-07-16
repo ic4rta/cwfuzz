@@ -48,9 +48,13 @@ sudo make install
 
 - a: user-agent (opcional, se usa uno por defecto)
 
+- e: extensiones (opcional)
+
 Tambien el programa incluye la palabra reservada "CWFUZZ" que tiene el mismo funcionamiento como en las herramientas wfuzz o ffuf.
 
-La enumeracion de subdominios se hace en modo VHOST, el dominio debe ir sin `http` o `https` y `www`
+El fuzzing de subdominios se hace en modo VHOST, el dominio debe ir sin `http` o `https` y `www`
+
+El fuzzing usando extensiones funciona como en la herramienta dirsearch, es decir, a cada linea de la wordlist se le agrega la extension que se indique
 
 ### Ejemplo de uso:
 
@@ -59,31 +63,43 @@ La enumeracion de subdominios se hace en modo VHOST, el dominio debe ir sin `htt
 
 
 ```bash
-cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200 -t 20
+cwfuzz -u http://example.com/ -w wordlist.txt -x 200 -t 20
 ```
 
 Multiples codigos de estado
 
 ```bash
-cwfuzz -u https://ic4rta.github.io/ -w wordlist.txt -x 200,301 -t 20
+cwfuzz -u http://example.com/ -w wordlist.txt -x 200,301 -t 20
 ```
 
 Guardar la salida en el archivo /tmp/fuzz
 
 ```bash
-cwfuzz -u https://ic4rta.github.io/CWFUZZ -w wordlist.txt -x 200,301 -t 20 -o /tmp/fuzz
+cwfuzz -u http://example.com/CWFUZZ -w wordlist.txt -x 200,301 -t 20 -o /tmp/fuzz
 ```
 
 Poner un User-Agent personalizado
 
 ```bash
-cwfuzz -u https://ic4rta.github.io/CWFUZZ -w wordlist.txt -x 200,301 -t 20 -o /tmp/fuzz -a "Cwfuzz"
+cwfuzz -u http://example.com/CWFUZZ -w wordlist.txt -x 200,301 -t 20 -o /tmp/fuzz -a "Cwfuzz"
 ```
 
-Enumerar subdominios (VHOST)
+Fuzzing de subdominios (VHOST)
 
 ```bash
 cwfuzz -u CWFUZZ.jupiter.htb -w wordlist.txt -x 200,301 -t 20
+```
+
+Fuzzing de extensiones sobre un archivo
+
+```bash
+cwfuzz -u http://example.com/indexCWFUZZ -w /usr/share/seclists/Discovery/Web-Content/web-extensions.txt -x 200,301 -t 20
+```
+
+Fuzzing de extensiones (opcion -e)
+
+```bash
+cwfuzz -u http://example.com/ -w wordlist.txt -x 200,301 -t 20 -e php,js,aspx
 ```
 
 # English
@@ -128,10 +144,14 @@ pacman -S libcurl-gnutls
 
 - a: user-agent (optional, one is used by default)
 
+- e: extensions (optional)
+
 
 Also the program includes the reserved word “CWFUZZ” which has the same functionality as in the wfuzz or ffuf tools
 
-The enumeration of subdomains is done in VHOST mode, the domain must go without `http` or `https` and `www`
+The fuzzing of subdomains is done in VHOST mode, the domain must go without `http` or `https` and `www`
+
+The fuzzing using extensions works like in the dirsearch tool, i.e., to each line of the wordlist you add the extension you specify
 
 ### Examples:
 
@@ -164,4 +184,16 @@ Enumerate subdomains (VHOST)
 
 ```bash
 cwfuzz -u CWFUZZ.jupiter.htb -w wordlist.txt -x 200,301 -t 20
+```
+
+Fuzzing of single-file extension
+
+```bash
+cwfuzz -u http://example.com/indexCWFUZZ -w /usr/share/seclists/Discovery/Web-Content/web-extensions.txt -x 200,301 -t 20
+```
+
+Fuzzing extensions (option -e)
+
+```bash
+cwfuzz -u http://example.com/ -w wordlist.txt -x 200,301 -t 20 -e php,js,aspx
 ```
