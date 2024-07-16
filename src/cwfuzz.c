@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
                 cwfuzz_struct.url = optarg;
                 break;
             case 'w':
-                cwfuzz_struct.archivo = optarg;
+                cwfuzz_struct.worlist = optarg;
                 break;
             case 'x':
                 {
@@ -36,7 +36,7 @@ int main(int argc, char* argv[]) {
                 cwfuzz_struct.cantidad_hilos = atoi(optarg);
                 break;
             case 'o':
-                cwfuzz_struct.archivo_resultados = optarg;
+                cwfuzz_struct.archivo_output = optarg;
                 break;
 	        case 'a':
 	            cwfuzz_struct.user_agent = optarg;
@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    if (!cwfuzz_struct.url || !cwfuzz_struct.archivo || !cwfuzz_struct.codigos_estado || cwfuzz_struct.cantidad_hilos <= 0) {
+    if (!cwfuzz_struct.url || !cwfuzz_struct.worlist || !cwfuzz_struct.codigos_estado || cwfuzz_struct.cantidad_hilos <= 0) {
         fprintf(stderr, "Faltan argumentos obligatorios\n");
         fprintf(stderr, "Uso: %s -u <URL> -w <archivo> -x <códigos de estado> -t <hilos> [-o <archivo de resultados>] [-a <User-Agent personalizado>]\n", argv[0]);
         exit(EXIT_FAILURE);

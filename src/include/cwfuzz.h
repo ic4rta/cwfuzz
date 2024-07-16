@@ -13,13 +13,13 @@
 
 typedef struct {
     const char* url;
-    const char* archivo;
+    const char* worlist;
     int* codigos_estado;
     int cantidad_codigos;
     int cantidad_hilos;
-    const char* archivo_resultados;
+    const char* archivo_output;
     const char* user_agent;
-    FILE* archivo_res;
+    FILE* archivo_ptr;
     pthread_mutex_t mutex;
     CURL* curl_handles[MAX_HILOS];
 } Cwfuzz;
@@ -54,14 +54,14 @@ void mostrar_resultado(const char* archivo, int codigo_estado) {
 }
 
 void guardar_resultados(Cwfuzz *cwfuzz_struct) {
-    if (cwfuzz_struct->archivo_resultados) {
-        cwfuzz_struct->archivo_res = fopen(cwfuzz_struct->archivo_resultados, "w");
-        if (!cwfuzz_struct->archivo_res) {
+    if (cwfuzz_struct->archivo_output) {
+        cwfuzz_struct->archivo_ptr = fopen(cwfuzz_struct->archivo_output, "w");
+        if (!cwfuzz_struct->archivo_ptr) {
             perror("No se pudo crear el archivo para guardar los resultados");
             exit(1);
         }
         pthread_mutex_init(&cwfuzz_struct->mutex, NULL);
-        fprintf(cwfuzz_struct->archivo_res, "%s\n\n", cwfuzz_struct->url);
+        fprintf(cwfuzz_struct->archivo_ptr, "%s\n\n", cwfuzz_struct->url);
     }
 }
 
@@ -81,8 +81,8 @@ void liberar_recursos(Cwfuzz *cwfuzz_struct, pthread_t *hilos) {
         curl_easy_cleanup(cwfuzz_struct->curl_handles[i]);
     }
 
-    if (cwfuzz_struct->archivo_res) {
-        fclose(cwfuzz_struct->archivo_res);
+    if (cwfuzz_struct->archivo_ptr) {
+        fclose(cwfuzz_struct->archivo_ptr);
         pthread_mutex_destroy(&cwfuzz_struct->mutex);
     }
 
@@ -126,9 +126,9 @@ void* fuzz(void* arg) {
     char linea[128];
     char url_completa[1024];
 
-    FILE* archivo = fopen(cwfuzz_struct->archivo, "r");
+    FILE* archivo = fopen(cwfuzz_struct->worlist, "r");
     if (!archivo) {
-        perror("No se pudo abrir el archivo");
+        perror("No se pudo abrir la wordlist");
         pthread_exit(NULL);
     }
 
@@ -144,9 +144,9 @@ void* fuzz(void* arg) {
             for (int i = 0; i < cwfuzz_struct->cantidad_codigos; ++i) {
                 if (codigo_estado == cwfuzz_struct->codigos_estado[i]) {
                     mostrar_resultado(linea, codigo_estado);
-                    if (cwfuzz_struct->archivo_res) {
+                    if (cwfuzz_struct->archivo_ptr) {
                         pthread_mutex_lock(&cwfuzz_struct->mutex);
-                        fprintf(cwfuzz_struct->archivo_res, "/%s\t%d\n", linea, codigo_estado);
+                        fprintf(cwfuzz_struct->archivo_ptr, "/%s\t%d\n", linea, codigo_estado);
                         pthread_mutex_unlock(&cwfuzz_struct->mutex);
                     }
                     break;
