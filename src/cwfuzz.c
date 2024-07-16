@@ -42,14 +42,14 @@ int main(int argc, char* argv[]) {
 	            cwfuzz_struct.user_agent = optarg;
 	            break;
 	        default:
-	            fprintf(stderr, "Uso: %s -u <URL> -w <archivo> -x <códigos de estado> -t <hilos> [-o <archivo de resultados>] [-a <User-Agent personalizado>]\n", argv[0]);
+	            fprintf(stderr, "Use: %s -u <URL> -w <wordlist> -x <status code...> -t <threads> [-o <output file>] [-a <custom User-Agent>]\n", argv[0]);
 	            exit(EXIT_FAILURE);
         }
     }
 
     if (!cwfuzz_struct.url || !cwfuzz_struct.worlist || !cwfuzz_struct.codigos_estado || cwfuzz_struct.cantidad_hilos <= 0) {
         fprintf(stderr, "Faltan argumentos obligatorios\n");
-        fprintf(stderr, "Uso: %s -u <URL> -w <archivo> -x <códigos de estado> -t <hilos> [-o <archivo de resultados>] [-a <User-Agent personalizado>]\n", argv[0]);
+        fprintf(stderr, "Use: %s -u <URL> -w <wordlist> -x <status code...> -t <threads> [-o <output file>] [-a <custom User-Agent>]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
