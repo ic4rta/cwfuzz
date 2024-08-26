@@ -131,6 +131,25 @@ void construir_url_completa(char* url_completa, size_t url_completa_size, const 
     }
 }
 
+void fuzz_proceso(const char* url_completa, const char* extension, Hilo* datos, const char* linea) {
+    Cwfuzz* cwfuzz_struct = datos->cwfuzz_struct;
+    int hilo_id = datos->hilo_id;
+
+    int codigo_estado = hacer_peticion(url_completa, cwfuzz_struct->curl_handles[hilo_id], cwfuzz_struct);
+
+    for (int j = 0; j < cwfuzz_struct->cantidad_codigos; ++j) {
+        if (codigo_estado == cwfuzz_struct->codigos_estado[j]) {
+            mostrar_resultado(linea, extension, codigo_estado);
+            if (cwfuzz_struct->archivo_ptr) {
+                pthread_mutex_lock(&cwfuzz_struct->mutex);
+                fprintf(cwfuzz_struct->archivo_ptr, "/%s\t%d\n", linea, codigo_estado);
+                pthread_mutex_unlock(&cwfuzz_struct->mutex);
+            }
+            break;
+        }
+    }
+}
+
 void* fuzz(void* arg) {
     Hilo* datos = (Hilo*) arg;
     Cwfuzz* cwfuzz_struct = datos->cwfuzz_struct;
@@ -152,37 +171,11 @@ void* fuzz(void* arg) {
             if (cwfuzz_struct->cantidad_extensiones > 0) {
                 for (int i = 0; i < cwfuzz_struct->cantidad_extensiones; ++i) {
                     construir_url_completa(url_completa, sizeof(url_completa), cwfuzz_struct, linea, cwfuzz_struct->extensiones[i]);
-
-                    int codigo_estado = hacer_peticion(url_completa, cwfuzz_struct->curl_handles[hilo_id], cwfuzz_struct);
-
-                    for (int j = 0; j < cwfuzz_struct->cantidad_codigos; ++j) {
-                        if (codigo_estado == cwfuzz_struct->codigos_estado[j]) {
-                            mostrar_resultado(linea, cwfuzz_struct->extensiones[i], codigo_estado);
-                            if (cwfuzz_struct->archivo_ptr) {
-                                pthread_mutex_lock(&cwfuzz_struct->mutex);
-                                fprintf(cwfuzz_struct->archivo_ptr, "/%s\t%d\n", linea, codigo_estado);
-                                pthread_mutex_unlock(&cwfuzz_struct->mutex);
-                            }
-                            break;
-                        }
-                    }
+                    fuzz_proceso(url_completa, cwfuzz_struct->extensiones[i], datos, linea);
                 }
             } else {
                 construir_url_completa(url_completa, sizeof(url_completa), cwfuzz_struct, linea, NULL);
-
-                int codigo_estado = hacer_peticion(url_completa, cwfuzz_struct->curl_handles[hilo_id], cwfuzz_struct);
-
-                for (int j = 0; j < cwfuzz_struct->cantidad_codigos; ++j) {
-                    if (codigo_estado == cwfuzz_struct->codigos_estado[j]) {
-                        mostrar_resultado(linea, NULL, codigo_estado);
-                        if (cwfuzz_struct->archivo_ptr) {
-                            pthread_mutex_lock(&cwfuzz_struct->mutex);
-                            fprintf(cwfuzz_struct->archivo_ptr, "/%s\t%d\n", linea, codigo_estado);
-                            pthread_mutex_unlock(&cwfuzz_struct->mutex);
-                        }
-                        break;
-                    }
-                }
+                fuzz_proceso(url_completa, NULL, datos, linea);
             }
         }
         contador++;
